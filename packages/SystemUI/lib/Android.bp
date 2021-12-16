@@ -9,3 +9,9 @@ java_import {
     jars: ["smartspace.jar"],
     sdk_version: "current",
 }
+
+java_import {
+    name: "SystemUIGoogle-lib",
+    jars: ["SystemUIGoogle.jar"],
+    sdk_version: "current",
+}

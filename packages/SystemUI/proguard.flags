@@ -1,4 +1,4 @@
--keep class com.android.systemui.navigationbar.buttons.KeyButtonView {
+keep class com.android.systemui.navigationbar.buttons.KeyButtonView {
   public float getDrawingAlpha();
   public void setDrawingAlpha(float);
 }
@@ -65,3 +65,6 @@
 # Google rules
 -keep class com.google.** { *; }
 -keep class vendor.** { *; }
+-keep class android.frameworks.** { *; }
+-keep class android.hardware.** { *; }
+-keep class org.pixelexperience.** { *; }
