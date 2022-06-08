@@ -80,6 +80,10 @@ public class QSFactoryImpl implements QSFactory {
 
     private static final String TAG = "QSFactory";
 
+    private final Lazy<QSHost> mQsHostLazy;
+    private final Provider<CustomTile.Builder> mCustomTileBuilderProvider;
+    private final Provider<RebootTile> mRebootTileProvider;
+    private final Provider<RefreshRateTile> mRefreshRateTileProvider;
     private final Provider<WifiTile> mWifiTileProvider;
     private final Provider<InternetTile> mInternetTileProvider;
     private final Provider<BluetoothTile> mBluetoothTileProvider;
@@ -107,31 +111,28 @@ public class QSFactoryImpl implements QSFactory {
     private final Provider<DeviceControlsTile> mDeviceControlsTileProvider;
     private final Provider<AlarmTile> mAlarmTileProvider;
     private final Provider<QuickAccessWalletTile> mQuickAccessWalletTileProvider;
-    private final Provider<PowerShareTile> mPowerShareTileProvider;
     private final Provider<CaffeineTile> mCaffeineTileProvider;
     private final Provider<AmbientDisplayTile> mAmbientDisplayTileProvider;
     private final Provider<AODTile> mAODTileProvider;
     private final Provider<UsbTetherTile> mUsbTetherTileProvider;
+    private final Provider<HeadsUpTile> mHeadsUpTileProvider;
+    private final Provider<ScreenshotTile> mScreenshotTileProvider;
     private final Provider<SyncTile> mSyncTileProvider;
     private final Provider<SoundTile> mSoundTileProvider;
-    private final Provider<ScreenshotTile> mScreenshotTileProvider;
-    private final Provider<HeadsUpTile> mHeadsUpTileProvider;
-    private final Provider<RebootTile> mRebootTileProvider;
-    private final Provider<RefreshRateTile> mRefreshRateTileProvider;
     private final Provider<CompassTile> mCompassTileProvider;
     private final Provider<DataSwitchTile> mDataSwitchTileProvider;
     private final Provider<CPUInfoTile> mCPUInfoTileProvider;
     private final Provider<FPSInfoTile> mFPSInfoTileProvider;
     private final Provider<VpnTile> mVpnTileProvider;
     private final Provider<MonoToggleTile> mMonoToggleTileProvider;
-
-    private final Lazy<QSHost> mQsHostLazy;
-    private final Provider<CustomTile.Builder> mCustomTileBuilderProvider;
+    private final Provider<PowerShareTile> mPowerShareTileProvider;
 
     @Inject
     public QSFactoryImpl(
             Lazy<QSHost> qsHostLazy,
             Provider<CustomTile.Builder> customTileBuilderProvider,
+            Provider<RebootTile> rebootTileProvider,
+            Provider<RefreshRateTile> refreshRateTileProvider,
             Provider<WifiTile> wifiTileProvider,
             Provider<InternetTile> internetTileProvider,
             Provider<BluetoothTile> bluetoothTileProvider,
@@ -159,26 +160,25 @@ public class QSFactoryImpl implements QSFactory {
             Provider<DeviceControlsTile> deviceControlsTileProvider,
             Provider<AlarmTile> alarmTileProvider,
             Provider<QuickAccessWalletTile> quickAccessWalletTileProvider,
-            Provider<PowerShareTile> powerShareTileProvider,
             Provider<CaffeineTile> caffeineTileProvider,
             Provider<AmbientDisplayTile> ambientDisplayTileProvider,
             Provider<AODTile> aodTileProvider,
             Provider<UsbTetherTile> usbTetherTileProvider,
+            Provider<HeadsUpTile> headsUpTileProvider,
+            Provider<ScreenshotTile> screenshotTileProvider,
             Provider<SyncTile> syncTileProvider,
             Provider<SoundTile> soundTileProvider,
-            Provider<ScreenshotTile> screenshotTileProvider,
-            Provider<HeadsUpTile> headsUpTileProvider,
-            Provider<RebootTile> rebootTileProvider,
-            Provider<RefreshRateTile> refreshRateTileProvider,
             Provider<CompassTile> compassTileProvider,
             Provider<DataSwitchTile> dataSwitchTileProvider,
             Provider<CPUInfoTile> cpuInfoTileProvider,
             Provider<FPSInfoTile> fpsInfoTileProvider,
             Provider<VpnTile> vpnTileProvider,
-            Provider<MonoToggleTile> monoToggleTileProvider) {
+            Provider<MonoToggleTile> monoToggleTileProvider,
+            Provider<PowerShareTile> powerShareTileProvider) {
         mQsHostLazy = qsHostLazy;
         mCustomTileBuilderProvider = customTileBuilderProvider;
-
+        mRebootTileProvider = rebootTileProvider;
+        mRefreshRateTileProvider = refreshRateTileProvider;
         mWifiTileProvider = wifiTileProvider;
         mInternetTileProvider = internetTileProvider;
         mBluetoothTileProvider = bluetoothTileProvider;
@@ -206,23 +206,21 @@ public class QSFactoryImpl implements QSFactory {
         mDeviceControlsTileProvider = deviceControlsTileProvider;
         mAlarmTileProvider = alarmTileProvider;
         mQuickAccessWalletTileProvider = quickAccessWalletTileProvider;
-        mPowerShareTileProvider = powerShareTileProvider;
         mCaffeineTileProvider = caffeineTileProvider;
         mAmbientDisplayTileProvider = ambientDisplayTileProvider;
         mAODTileProvider = aodTileProvider;
         mUsbTetherTileProvider = usbTetherTileProvider;
+        mHeadsUpTileProvider = headsUpTileProvider;
+        mScreenshotTileProvider = screenshotTileProvider;
         mSyncTileProvider = syncTileProvider;
         mSoundTileProvider = soundTileProvider;
-        mScreenshotTileProvider = screenshotTileProvider;
-        mHeadsUpTileProvider = headsUpTileProvider;
-        mRebootTileProvider = rebootTileProvider;
-        mRefreshRateTileProvider = refreshRateTileProvider;
         mCompassTileProvider = compassTileProvider;
         mDataSwitchTileProvider = dataSwitchTileProvider;
         mCPUInfoTileProvider = cpuInfoTileProvider;
         mFPSInfoTileProvider = fpsInfoTileProvider;
         mVpnTileProvider = vpnTileProvider;
         mMonoToggleTileProvider = monoToggleTileProvider;
+        mPowerShareTileProvider = powerShareTileProvider;
     }
 
     public QSTile createTile(String tileSpec) {
@@ -237,6 +235,10 @@ public class QSFactoryImpl implements QSFactory {
     private QSTileImpl createTileInternal(String tileSpec) {
         // Stock tiles.
         switch (tileSpec) {
+            case "reboot":
+                return mRebootTileProvider.get();
+            case "refresh_rate":
+                return mRefreshRateTileProvider.get();
             case "wifi":
                 return mWifiTileProvider.get();
             case "internet":
@@ -290,8 +292,6 @@ public class QSFactoryImpl implements QSFactory {
             case "wallet":
                 return mQuickAccessWalletTileProvider.get();
             // Additional tiles.
-            case "powershare":
-                return mPowerShareTileProvider.get();
             case "caffeine":
                 return mCaffeineTileProvider.get();
             case "ambient_display":
@@ -300,18 +300,14 @@ public class QSFactoryImpl implements QSFactory {
                 return mAODTileProvider.get();
             case "usb_tether":
                 return mUsbTetherTileProvider.get();
+            case "heads_up":
+                return mHeadsUpTileProvider.get();
+            case "screenshot":
+                return mScreenshotTileProvider.get();
             case "sync":
                 return mSyncTileProvider.get();
             case "sound":
                 return mSoundTileProvider.get();
-            case "screenshot":
-                return mScreenshotTileProvider.get();
-            case "heads_up":
-                return mHeadsUpTileProvider.get();
-            case "reboot":
-                return mRebootTileProvider.get();
-            case "refresh_rate":
-                return mRefreshRateTileProvider.get();
             case "compass":
                 return mCompassTileProvider.get();
             case "dataswitch":
@@ -324,6 +320,8 @@ public class QSFactoryImpl implements QSFactory {
                 return mVpnTileProvider.get();
             case "mono":
                 return mMonoToggleTileProvider.get();
+            case "powershare":
+                return mPowerShareTileProvider.get();
         }
         // Custom tiles
         if (tileSpec.startsWith(CustomTile.PREFIX)) {
