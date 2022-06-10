@@ -61,7 +61,6 @@ public class QuickQSPanelController extends QSPanelControllerBase<QuickQSPanel> 
     private final FooterActionsController mFooterActionsController;
     private final TunerService mTunerService;
     private final BrightnessSliderController mBrightnessSliderController;
-    private BrightnessMirrorController mBrightnessMirrorController;
 
     @Inject
     QuickQSPanelController(QuickQSPanel view, QSTileHost qsTileHost,
@@ -85,7 +84,6 @@ public class QuickQSPanelController extends QSPanelControllerBase<QuickQSPanel> 
 
         mBrightnessController = brightnessControllerFactory.create(
                 mBrightnessSliderController.getIconView(), mBrightnessSliderController);
-        mBrightnessMirrorHandler = new BrightnessMirrorHandler(mBrightnessController);
     }
 
     @Override
